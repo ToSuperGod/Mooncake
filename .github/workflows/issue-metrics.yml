@@ -1,0 +1,77 @@
+name: GitHub Metrics - Kubernetes & Mooncake
+
+on:
+  workflow_dispatch:   # 手动触发
+  schedule:
+    - cron: '0 3 * * 1'  # 每周一凌晨3点自动运行（可选）
+
+jobs:
+  # ==================== Kubernetes ====================
+  k8s-issues:
+    name: Kubernetes Issues 首次响应
+    runs-on: ubuntu-latest
+    permissions: { issues: read, pull-requests: read }
+
+    steps:
+      - uses: github/issue-metrics@v2
+        with:
+          search_query: 'repo:kubernetes/kubernetes is:issue created:>2025-01-01'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "📊 Kubernetes Issue Metrics Report"
+          content-filepath: ./issue-metrics-report.md
+
+  k8s-prs:
+    name: Kubernetes PRs 首次响应
+    runs-on: ubuntu-latest
+    permissions: { issues: read, pull-requests: read }
+
+    steps:
+      - uses: github/issue-metrics@v2
+        with:
+          search_query: 'repo:kubernetes/kubernetes is:pr created:>2025-01-01'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "📊 Kubernetes PR Metrics Report"
+          content-filepath: ./issue-metrics-report.md
+
+  # ==================== Mooncake ====================
+  mooncake-issues:
+    name: Mooncake Issues 首次响应
+    runs-on: ubuntu-latest
+    permissions: { issues: read, pull-requests: read }
+
+    steps:
+      - uses: github/issue-metrics@v2
+        with:
+          search_query: 'repo:kvcache-ai/Mooncake is:issue created:>2025-01-01'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "📊 Mooncake Issue Metrics Report"
+          content-filepath: ./issue-metrics-report.md
+
+  mooncake-prs:
+    name: Mooncake PRs 首次响应
+    runs-on: ubuntu-latest
+    permissions: { issues: read, pull-requests: read }
+
+    steps:
+      - uses: github/issue-metrics@v2
+        with:
+          search_query: 'repo:kvcache-ai/Mooncake is:pr created:>2025-01-01'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "📊 Mooncake PR Metrics Report"
+          content-filepath: ./issue-metrics-report.md
